@@ -15,13 +15,12 @@ public class Account {
     private String name;
 
     @Column(nullable = false)
-    private BigDecimal balance;
+    private BigDecimal balance = BigDecimal.ZERO;
 
     public Account() {}
 
-    public Account(String name, BigDecimal balance) {
+    public Account(String name) {
         this.name = name;
-        this.balance = balance;
     }
 
     public Long getId() {
