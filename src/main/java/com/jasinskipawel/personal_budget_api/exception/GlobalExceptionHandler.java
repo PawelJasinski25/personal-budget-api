@@ -1,8 +1,9 @@
 package com.jasinskipawel.personal_budget_api.exception;
 
-import com.jasinskipawel.personal_budget_api.account.AccountAlreadyExistsException;
-import com.jasinskipawel.personal_budget_api.account.AccountNotFoundException;
-import com.jasinskipawel.personal_budget_api.transaction.TransactionNotFoundException;
+import com.jasinskipawel.personal_budget_api.account.exception.AccountAlreadyExistsException;
+import com.jasinskipawel.personal_budget_api.account.exception.AccountHasTransactionsException;
+import com.jasinskipawel.personal_budget_api.account.exception.AccountNotFoundException;
+import com.jasinskipawel.personal_budget_api.transaction.exception.TransactionNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -58,5 +59,11 @@ public class GlobalExceptionHandler {
         String paramName = ex.getName();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse("Nieprawidłowy format parametru: " + paramName));
+    }
+
+    @ExceptionHandler(AccountHasTransactionsException.class)
+    public ResponseEntity<ErrorResponse> handleAccountHasTransactions(AccountHasTransactionsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(ex.getMessage()));
     }
 }

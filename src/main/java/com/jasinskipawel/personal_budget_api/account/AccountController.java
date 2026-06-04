@@ -28,6 +28,19 @@ public class AccountController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<AccountResponse> getAccountById(@PathVariable Long id) {
+        Account account = accountService.getAccountById(id);
+
+        AccountResponse response = new AccountResponse(
+                account.getId(),
+                account.getName(),
+                account.getBalance()
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping
     public ResponseEntity<AccountResponse> createAccount(@Valid @RequestBody AccountCreateRequest request) {
         Account accountToSave = new Account(request.name());
@@ -40,5 +53,11 @@ public class AccountController {
         );
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccount(id);
+        return ResponseEntity.noContent().build();
     }
 }

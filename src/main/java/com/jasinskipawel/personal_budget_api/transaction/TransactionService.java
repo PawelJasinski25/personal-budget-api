@@ -1,9 +1,10 @@
 package com.jasinskipawel.personal_budget_api.transaction;
 
 import com.jasinskipawel.personal_budget_api.account.Account;
-import com.jasinskipawel.personal_budget_api.account.AccountNotFoundException;
+import com.jasinskipawel.personal_budget_api.account.exception.AccountNotFoundException;
 import com.jasinskipawel.personal_budget_api.account.AccountRepository;
 import com.jasinskipawel.personal_budget_api.transaction.dto.TransactionCreateRequest;
+import com.jasinskipawel.personal_budget_api.transaction.exception.TransactionNotFoundException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,9 +47,9 @@ public class TransactionService {
         );
 
         if (request.type() == TransactionType.INCOME) {
-            account.setBalance(account.getBalance().add(request.amount()));
+            account.increaseBalance(transaction.getAmount());
         } else {
-            account.setBalance(account.getBalance().subtract(request.amount()));
+            account.decreaseBalance(transaction.getAmount());
         }
 
         accountRepository.save(account);
@@ -78,9 +79,9 @@ public class TransactionService {
 
 
         if (transaction.getType() == TransactionType.INCOME) {
-            account.setBalance(account.getBalance().subtract(transaction.getAmount()));
+            account.decreaseBalance(transaction.getAmount());
         } else {
-            account.setBalance(account.getBalance().add(transaction.getAmount()));
+            account.increaseBalance(transaction.getAmount());
         }
 
         accountRepository.save(account);
