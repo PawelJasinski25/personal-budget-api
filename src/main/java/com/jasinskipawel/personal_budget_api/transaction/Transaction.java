@@ -56,9 +56,6 @@ public class Transaction {
         return amount;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
 
     public LocalDate getDate() {
         return date;
@@ -79,7 +76,4 @@ public class Transaction {
         return account;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
 }

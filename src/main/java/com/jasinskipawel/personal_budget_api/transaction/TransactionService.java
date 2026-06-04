@@ -57,6 +57,10 @@ public class TransactionService {
 
     public List<Transaction> getAllTransactions(String category, LocalDate from, LocalDate to) {
 
+        if (from != null && to != null && from.isAfter(to)) {
+            throw new IllegalArgumentException("Data początkowa ('from') nie może być późniejsza niż data końcowa ('to').");
+        }
+
         Specification<Transaction> spec = Specification.where(TransactionSpecifications.hasCategory(category))
                 .and(TransactionSpecifications.hasDateFrom(from))
                 .and(TransactionSpecifications.hasDateTo(to));
