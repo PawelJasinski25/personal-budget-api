@@ -17,10 +17,12 @@ import java.util.List;
 public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
+    private final CsvTransactionExporter csvExporter;
 
-    public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository){
+    public TransactionService(TransactionRepository transactionRepository, AccountRepository accountRepository, CsvTransactionExporter csvTransactionExporter){
         this.transactionRepository = transactionRepository;
         this.accountRepository = accountRepository;
+        this.csvExporter = csvTransactionExporter;
     }
 
     @Transactional
@@ -86,5 +88,13 @@ public class TransactionService {
 
         accountRepository.save(account);
         transactionRepository.delete(transaction);
+    }
+
+    public byte[] exportTransactionsToCsv(Long accountId) {
+        accountRepository.findById(accountId)
+                .orElseThrow(() -> new AccountNotFoundException("Konto o ID " + accountId + " nie istnieje."));
+
+        List<Transaction> transactions = transactionRepository.findByAccountId(accountId);
+        return csvExporter.exportToCsv(transactions);
     }
 }

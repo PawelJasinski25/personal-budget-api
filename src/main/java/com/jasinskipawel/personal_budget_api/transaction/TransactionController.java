@@ -19,7 +19,7 @@ import java.util.List;
 
 @RestController
 @Tag(name = "Transakcje", description = "Zarządzanie przychodami i wydatkami")
-@RequestMapping("/api/transactions")
+@RequestMapping(value = "/api/transactions", produces = "application/json")
 public class TransactionController {
     private final TransactionService transactionService;
 

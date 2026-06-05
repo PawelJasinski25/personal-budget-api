@@ -18,7 +18,7 @@ import java.time.LocalDate;
 
 @RestController
 @Tag(name = "Podsumowania", description = "Generowanie raportów finansowych budżetu osobistego")
-@RequestMapping("/api/summary")
+@RequestMapping(value="/api/summary", produces = "application/json")
 public class SummaryController {
 
     private final SummaryService summaryService;
