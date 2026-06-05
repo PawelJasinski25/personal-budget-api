@@ -14,8 +14,9 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(AccountAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleAccountAlreadyExists(AccountAlreadyExistsException ex) {
+
+    @ExceptionHandler({AccountAlreadyExistsException.class, AccountHasTransactionsException.class})
+    public ResponseEntity<ErrorResponse> handleConflictExceptions(AccountAlreadyExistsException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(ex.getMessage()));
     }
@@ -29,17 +30,12 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(errorMessage));
     }
 
-    @ExceptionHandler(AccountNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleAccountNotFound(AccountNotFoundException ex) {
+    @ExceptionHandler({AccountNotFoundException.class, TransactionNotFoundException.class})
+    public ResponseEntity<ErrorResponse> handleNotFoundException(AccountNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ErrorResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler(TransactionNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleTransactionNotFound(TransactionNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorResponse(ex.getMessage()));
-    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleJsonErrors(HttpMessageNotReadableException ex) {
@@ -59,11 +55,5 @@ public class GlobalExceptionHandler {
         String paramName = ex.getName();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse("Nieprawidłowy format parametru: " + paramName));
-    }
-
-    @ExceptionHandler(AccountHasTransactionsException.class)
-    public ResponseEntity<ErrorResponse> handleAccountHasTransactions(AccountHasTransactionsException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(new ErrorResponse(ex.getMessage()));
     }
 }
